@@ -1,0 +1,6 @@
+# dune init project aoc2025
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /Users/walidmenou/.cache/dune/db
+# Workspace root: /Users/walidmenou/workspace/aoc2025
+# Auto-detected concurrency: 8
