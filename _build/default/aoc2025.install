@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/aoc2025/META"
+  "_build/install/default/lib/aoc2025/dune-package"
+  "_build/install/default/lib/aoc2025/opam"
+]
+bin: [
+  "_build/install/default/bin/aoc2025"
+]

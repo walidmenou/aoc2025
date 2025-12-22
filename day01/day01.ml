@@ -9,24 +9,25 @@ let rotation =
 
 let part1 =
   let rec helper pos count =
-  alt
-    (rotation
-      |*> fun n ->
-          let pos = (pos + n) mod 100 in
-          if pos = 0 then helper pos (count + 1) else helper pos count)
-    (of_value count)
+    alt
+      (rotation
+       |*> fun n ->
+       let pos = (pos + n) mod 100 in
+       if pos = 0 then helper pos (count + 1) else helper pos count)
+      (of_value count)
   in
   helper 50 0
+;;
 
 let part2 =
   let rec helper pos count =
     alt
       (rotation
-      |*> fun n ->
-          let pos = pos + n in
-          let count = count + (Int.abs(pos) / 100) + Bool.to_int(pos <= 0 && pos - n <> 0) in
-          let pos = (pos mod 100 + 100) mod 100 in
-          helper pos count)
+       |*> fun n ->
+       let pos = pos + n in
+       let count = count + (Int.abs pos / 100) + Bool.to_int (pos <= 0 && pos - n <> 0) in
+       let pos = ((pos mod 100) + 100) mod 100 in
+       helper pos count)
       (of_value count)
   in
   helper 50 0
