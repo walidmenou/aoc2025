@@ -27,6 +27,9 @@ let maybe p = alt (map (fun r -> Some r) p) (of_value None)
 let ( <<| ) p q = p |*> fun r -> q |*> fun _ -> of_value r
 let ( |>> ) p q = p |*> fun _ -> q |*> fun r -> of_value r
 
+let sep_by sep p =
+  maybe sep |>> p
+
 (* parsers *)
 let satisfies p = function
   | c :: cs when p c -> Some (c, cs)
@@ -34,6 +37,7 @@ let satisfies p = function
 ;;
 
 let char c = satisfies (fun x -> c = x)
+let newline = maybe (char '\n')
 
 let digit =
   satisfies (function
