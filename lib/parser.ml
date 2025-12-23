@@ -8,6 +8,7 @@ let ( |*> ) p f =
   | None -> None
 ;;
 
+
 let alt p q =
   fun input ->
   match p input with
@@ -22,6 +23,9 @@ and some p = p |*> fun x -> many p |*> fun xs -> of_value (x :: xs)
 
 let map f p = p |*> fun r -> of_value (f r)
 let maybe p = alt (map (fun r -> Some r) p) (of_value None)
+
+let ( <<| ) p q = p |*> fun r -> q |*> fun _ -> of_value r
+let ( |>> ) p q = p |*> fun _ -> q |*> fun r -> of_value r
 
 (* parsers *)
 let satisfies p = function
