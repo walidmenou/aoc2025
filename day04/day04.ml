@@ -64,7 +64,7 @@ let should_remove grid (x, y) =
 ;;
 
 let parsed_input =
-  In_channel.stdin
+  open_in "input"
   |> In_channel.input_all
   |> stol
   |> input
@@ -77,4 +77,18 @@ let part1 =
   fun input -> input |> CoordSet.filter (should_remove input) |> CoordSet.cardinal
 ;;
 
+
+let part2 = fun input ->
+  let rec helper acc grid =
+    let to_remove = grid |> CoordSet.filter (should_remove grid) in
+    match CoordSet.cardinal to_remove with
+    | 0 -> acc
+    | x ->
+        let new_grid = CoordSet.diff grid to_remove in
+        helper (acc + x) new_grid
+  in
+  helper 0 input
+
+
 let () = parsed_input |> part1 |> Int.to_string |> print_endline
+let () = parsed_input |> part2 |> Int.to_string |> print_endline
