@@ -1,5 +1,7 @@
 open Aoc2025.Parser;;
 
+module IntSet = Set.Make(Int);;
+
 let range =
   number <<| char '-'
   |*> fun a -> number
@@ -28,6 +30,29 @@ let part1 ranges ids =
   in
   helper 0 ids
 
+let compare (lo1, hi1) (lo2, hi2) =
+  match Int.compare lo1 lo2 with
+  | 0 -> Int.compare hi1 hi2
+  | o -> o
+;;
+
+let merged ranges =
+  ranges
+  |> List.sort compare
+  |> List.fold_left
+            (fun acc (lo2, hi2) ->
+                match acc with
+                | (lo1, hi1) :: rs when lo2 <= hi1 -> (lo1, max hi1 hi2) :: rs
+                | _ -> (lo2, hi2) :: acc) []
+;;
+
+let range_size (lo, hi) = hi - lo + 1
+let sum = List.fold_left ( + ) 0
+let part2 ranges =
+  ranges
+  |> merged
+  |> List.map range_size
+  |> sum
 
 let input =
   open_in "input"
@@ -42,3 +67,4 @@ let ranges, ids =
 ;;
 
 let () = (part1 ranges ids) |> Int.to_string |> print_endline
+let () = (part2 ranges) |> Int.to_string |> print_endline
