@@ -13,25 +13,24 @@ let largest_pair l =
 let largest_subset l =
   let opt = Hashtbl.create 1 in
   let rec helper k l =
-    if List.length l < k then 0
-    else
+    if List.length l < k
+    then 0
+    else (
       match k with
       | 0 -> 0
       | _ ->
-          match l with
-          | [] -> 0
-          | x :: xs ->
-              if Hashtbl.mem opt (k, l) then
-                Hashtbl.find opt (k, l)
-              else
-              let power = Int.of_float (10. ** float_of_int (k - 1)) in
-
-              let take = (x * power) + helper (k - 1) xs in
-              let skip = helper k xs in
-
-              let res = Int.max take skip in
-              Hashtbl.add opt (k, l) res;
-              res
+        (match l with
+         | [] -> 0
+         | x :: xs ->
+           if Hashtbl.mem opt (k, l)
+           then Hashtbl.find opt (k, l)
+           else (
+             let power = Int.of_float (10. ** float_of_int (k - 1)) in
+             let take = (x * power) + helper (k - 1) xs in
+             let skip = helper k xs in
+             let res = Int.max take skip in
+             Hashtbl.add opt (k, l) res;
+             res)))
   in
   helper 12 l
 ;;
@@ -60,6 +59,33 @@ let part2 =
 
 let example = open_in "example" |> In_channel.input_all |> stol
 let input = open_in "input" |> In_channel.input_all |> stol
-let () = input |> part1 |> Option.get |> fst |> Int.to_string |> String.cat "Part 1 answer: " |> print_endline
-let () = input |> part2 |> Option.get |> fst |> Int.to_string |> String.cat "Part 2 answer: " |>  print_endline
-let () = example |> part2 |> Option.get |> fst |> Int.to_string |> String.cat "Part 2 Example: "  |> print_endline
+
+let () =
+  input
+  |> part1
+  |> Option.get
+  |> fst
+  |> Int.to_string
+  |> String.cat "Part 1 answer: "
+  |> print_endline
+;;
+
+let () =
+  input
+  |> part2
+  |> Option.get
+  |> fst
+  |> Int.to_string
+  |> String.cat "Part 2 answer: "
+  |> print_endline
+;;
+
+let () =
+  example
+  |> part2
+  |> Option.get
+  |> fst
+  |> Int.to_string
+  |> String.cat "Part 2 Example: "
+  |> print_endline
+;;

@@ -8,7 +8,6 @@ let ( |*> ) p f =
   | None -> None
 ;;
 
-
 let alt p q =
   fun input ->
   match p input with
@@ -23,12 +22,10 @@ and some p = p |*> fun x -> many p |*> fun xs -> of_value (x :: xs)
 
 let map f p = p |*> fun r -> of_value (f r)
 let maybe p = alt (map (fun r -> Some r) p) (of_value None)
-
 let ( <<| ) p q = p |*> fun r -> q |*> fun _ -> of_value r
 let ( |>> ) p q = p |*> fun _ -> q |*> fun r -> of_value r
-
-let sep_by sep p =
-  maybe sep |>> p
+let ( <+> ) p q = alt p q
+let sep_by sep p = p |*> fun x -> many (sep |>> p) |*> fun xs -> of_value (x :: xs)
 
 (* parsers *)
 let satisfies p = function
@@ -57,11 +54,6 @@ let eof = function
 let stol s = s |> String.to_seq |> List.of_seq
 let ltos l = l |> List.to_seq |> String.of_seq
 
-(* tuple handling *)
-let fst = function
-  | a, _ -> a
-;;
+(* parser result handling *)
 
-let snd = function
-  | _, b -> b
-;;
+exception ParsingError
