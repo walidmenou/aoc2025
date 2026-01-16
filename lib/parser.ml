@@ -36,6 +36,12 @@ let satisfies p = function
 let char c = satisfies (fun x -> c = x)
 let newline = maybe (char '\n')
 
+let digit_char =
+  satisfies (function
+    | '0' .. '9' -> true
+    | _ -> false)
+;;
+
 let digit =
   satisfies (function
     | '0' .. '9' -> true

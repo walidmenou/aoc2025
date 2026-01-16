@@ -26,9 +26,8 @@ let transpose (m : 'a list list) =
   helper m []
 ;;
 
-(* *)
-
-let parsed_input = open_in "input" |> In_channel.input_all |> stol |> parse_input
+let input = open_in "input" |> In_channel.input_all |> stol
+let parsed_input = parse_input input
 let grid, ops = parsed_input |> Option.get |> fst
 let grid = transpose grid
 
@@ -42,4 +41,47 @@ let part1 grid ops =
   helper grid ops 0
 ;;
 
+(* Part 2 *)
+
+let raw_line = many (alt space digit_char) <<| newline
+
+let p2_parse =
+  many raw_line
+  |*> fun grid -> sep_by spaces operator |*> fun operators -> of_value (grid, operators)
+;;
+
+let rec concat = function
+  | [] -> []
+  | x :: xs -> (x @ [ ';' ]) @ concat xs
+;;
+
+let p2_input =
+  let grid, ops = p2_parse input |> Option.get |> fst in
+  let grid =
+    grid
+    |> List.map List.rev
+    |> transpose
+    |> List.map (List.filter (fun c -> c <> ' '))
+    |> List.map (function
+      | [] -> [ '\n' ]
+      | xs -> xs)
+    |> concat
+  in
+  let ops = List.rev ops in
+  grid, ops
+;;
+
+let semicolon = char ';'
+
+let p2_numbers =
+  sep_by newline (maybe semicolon |>> sep_by semicolon number <<| maybe semicolon)
+;;
+
+let part2 =
+  let grid, ops = p2_input in
+  let grid = grid |> p2_numbers |> Option.get |> fst in
+  part1 grid ops
+;;
+
 let () = part1 grid ops |> Int.to_string |> print_endline
+let () = part2 |> Int.to_string |> print_endline
